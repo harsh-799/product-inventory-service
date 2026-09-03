@@ -1,6 +1,8 @@
 package com.harsh.product.inventory.controller;
 
+import com.harsh.product.inventory.dto.request.LoginRequest;
 import com.harsh.product.inventory.dto.request.RegisterRequest;
+import com.harsh.product.inventory.dto.response.LoginResponse;
 import com.harsh.product.inventory.dto.response.RegisterResponse;
 import com.harsh.product.inventory.service.AuthService;
 import jakarta.validation.Valid;
@@ -22,6 +24,11 @@ public class AuthController {
     @PostMapping("/register")
     public ResponseEntity<RegisterResponse> registerUser(@Valid @RequestBody RegisterRequest registerRequest) {
         return ResponseEntity.status(HttpStatus.CREATED).body(authService.register(registerRequest));
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<LoginResponse> loginUser(@Valid @RequestBody LoginRequest loginRequest) {
+        return ResponseEntity.status(HttpStatus.OK).body(authService.login(loginRequest));
     }
 
 }
