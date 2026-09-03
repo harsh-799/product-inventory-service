@@ -1,5 +1,6 @@
 package com.harsh.product.inventory.service;
 
+import com.harsh.product.inventory.dto.request.ItemRequest;
 import com.harsh.product.inventory.dto.request.ProductRequest;
 import com.harsh.product.inventory.dto.response.ItemResponse;
 import com.harsh.product.inventory.dto.response.ProductCreateResponse;
@@ -152,6 +153,18 @@ public class ProductService {
         }
 
         return itemResponses;
+    }
+
+    public ItemResponse createItem(Long productId, ItemRequest itemRequest) {
+        Product product = getProduct(productId);
+
+        Item item = Item.builder()
+                .product(product)
+                .quantity(itemRequest.getQuantity())
+                .build();
+
+        Item savedItem = itemRepository.save(item);
+        return mapToItemResponse(savedItem);
     }
 
 }

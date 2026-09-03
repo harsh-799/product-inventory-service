@@ -1,5 +1,6 @@
 package com.harsh.product.inventory.controller;
 
+import com.harsh.product.inventory.dto.request.ItemRequest;
 import com.harsh.product.inventory.dto.request.ProductRequest;
 import com.harsh.product.inventory.dto.response.ApiResponse;
 import com.harsh.product.inventory.dto.response.ItemResponse;
@@ -82,9 +83,22 @@ public class ProductController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
-    @GetMapping("/{id}/items")
-    public ResponseEntity<ApiResponse<List<ItemResponse>>> getItemsByProductId(@PathVariable Long id) {
-        List<ItemResponse> items = productService.getItemsByProductId(id);
+    @PostMapping("/{productId}/items")
+    public ResponseEntity<ApiResponse<ItemResponse>> createItem(
+            @PathVariable Long productId,
+            @Valid @RequestBody ItemRequest itemRequest) {
+        ItemResponse item = productService.createItem(productId, itemRequest);
+        ApiResponse<ItemResponse> response = ApiResponse.<ItemResponse>builder()
+                .success(true)
+                .message("Item created successfully")
+                .data(item)
+                .build();
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    @GetMapping("/{productId}/items")
+    public ResponseEntity<ApiResponse<List<ItemResponse>>> getItemsByProductId(@PathVariable Long productId) {
+        List<ItemResponse> items = productService.getItemsByProductId(productId);
         ApiResponse<List<ItemResponse>> response = ApiResponse.<List<ItemResponse>>builder()
                 .success(true)
                 .message("Items fetched successfully")
