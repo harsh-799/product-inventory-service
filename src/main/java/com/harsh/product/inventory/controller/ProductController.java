@@ -2,17 +2,21 @@ package com.harsh.product.inventory.controller;
 
 import com.harsh.product.inventory.dto.request.ProductRequest;
 import com.harsh.product.inventory.dto.response.ApiResponse;
+import com.harsh.product.inventory.dto.response.ItemResponse;
+import com.harsh.product.inventory.dto.response.ProductCreateResponse;
 import com.harsh.product.inventory.dto.response.ProductPageResponse;
 import com.harsh.product.inventory.dto.response.ProductResponse;
+import com.harsh.product.inventory.dto.response.ProductUpdateResponse;
 import com.harsh.product.inventory.service.ProductService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/products")
@@ -22,13 +26,15 @@ public class ProductController {
     private final ProductService productService;
 
     @PostMapping
-    public ResponseEntity<ApiResponse<ProductResponse>> createProduct(@Valid @RequestBody ProductRequest productRequest) {
-        ProductResponse product = productService.createProduct(productRequest);
-        ApiResponse<ProductResponse> response = ApiResponse.<ProductResponse>builder()
+    public ResponseEntity<ApiResponse<ProductCreateResponse>> createProduct(@Valid @RequestBody ProductRequest productRequest) {
+        ProductCreateResponse product = productService.createProduct(productRequest);
+
+        ApiResponse<ProductCreateResponse> response = ApiResponse.<ProductCreateResponse>builder()
                 .success(true)
                 .message("Product created successfully")
                 .data(product)
                 .build();
+
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
@@ -60,9 +66,9 @@ public class ProductController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ApiResponse<ProductResponse>> updateProduct(@PathVariable Long id, @Valid @RequestBody ProductRequest productRequest) {
-        ProductResponse product = productService.updateProduct(id, productRequest);
-        ApiResponse<ProductResponse> response = ApiResponse.<ProductResponse>builder()
+    public ResponseEntity<ApiResponse<ProductUpdateResponse>> updateProduct(@PathVariable Long id, @Valid @RequestBody ProductRequest productRequest) {
+        ProductUpdateResponse product = productService.updateProduct(id, productRequest);
+        ApiResponse<ProductUpdateResponse> response = ApiResponse.<ProductUpdateResponse>builder()
                 .success(true)
                 .message("Product updated successfully")
                 .data(product)
@@ -74,5 +80,16 @@ public class ProductController {
     public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
         productService.deleteProduct(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    @GetMapping("/{id}/items")
+    public ResponseEntity<ApiResponse<List<ItemResponse>>> getItemsByProductId(@PathVariable Long id) {
+        List<ItemResponse> items = productService.getItemsByProductId(id);
+        ApiResponse<List<ItemResponse>> response = ApiResponse.<List<ItemResponse>>builder()
+                .success(true)
+                .message("Items fetched successfully")
+                .data(items)
+                .build();
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 }

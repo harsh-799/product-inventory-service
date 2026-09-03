@@ -5,17 +5,18 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import java.util.List;
+
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ProductPageResponse {
+public class ProductUpdateResponse {
 
-    private List<ProductListResponse> products;
-    private Integer page;
-    private Boolean isLast;
-    private Long totalElements;
+    private Long id;
+    private String name;
+    private String modifiedBy;
+    private LocalDateTime modifiedOn;
 }
