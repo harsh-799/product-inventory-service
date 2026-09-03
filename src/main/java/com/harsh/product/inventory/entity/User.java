@@ -1,6 +1,6 @@
 package com.harsh.product.inventory.entity;
 
-import com.harsh.product.inventory.service.enums.Role;
+import com.harsh.product.inventory.enums.Role;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
