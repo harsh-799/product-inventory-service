@@ -37,7 +37,7 @@ public class GlobalExceptionHandler {
                 .message(ex.getMessage())
                 .build();
 
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorDetails);
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorDetails);
     }
 
 
