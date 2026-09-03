@@ -1,18 +1,21 @@
 package com.harsh.product.inventory.service;
 
 import com.harsh.product.inventory.dto.request.ProductRequest;
+import com.harsh.product.inventory.dto.response.ProductPageResponse;
 import com.harsh.product.inventory.dto.response.ProductResponse;
 import com.harsh.product.inventory.entity.Product;
 import com.harsh.product.inventory.entity.User;
 import com.harsh.product.inventory.exception.ProductNotFoundException;
 import com.harsh.product.inventory.repository.ProductRepository;
 import com.harsh.product.inventory.repository.UserRepository;
-import com.harsh.product.inventory.security.CustomUserDetails;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -60,12 +63,22 @@ public class ProductService {
         return mapToResponse(savedProduct);
     }
 
-    public List<ProductResponse> getAllProducts() {
-        List<Product> productList = productRepository.findAll();
+    public ProductPageResponse getAllProducts(Pageable pageable) {
+        Page<Product> productPage = productRepository.findAll(pageable);
 
-        return productList.stream()
-                .map(this::mapToResponse)
-                .toList();
+        List<ProductResponse> productResponsesList = new ArrayList<>();
+
+        for (Product product : productPage.getContent()) {
+            productResponsesList.add(mapToResponse(product));
+        }
+
+        return ProductPageResponse.builder()
+                .page(productPage.getNumber())
+                .size(productPage.getSize())
+                .totalElements(productPage.getTotalElements())
+                .isLast(productPage.isLast())
+                .products(productResponsesList)
+                .build();
     }
 
     public ProductResponse getProductById(Long id) {

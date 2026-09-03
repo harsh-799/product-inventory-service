@@ -2,15 +2,17 @@ package com.harsh.product.inventory.controller;
 
 import com.harsh.product.inventory.dto.request.ProductRequest;
 import com.harsh.product.inventory.dto.response.ApiResponse;
+import com.harsh.product.inventory.dto.response.ProductPageResponse;
 import com.harsh.product.inventory.dto.response.ProductResponse;
 import com.harsh.product.inventory.service.ProductService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/products")
@@ -31,9 +33,14 @@ public class ProductController {
     }
 
     @GetMapping
-    public ResponseEntity<ApiResponse<List<ProductResponse>>> getAllProducts() {
-        List<ProductResponse> products = productService.getAllProducts();
-        ApiResponse<List<ProductResponse>> response = ApiResponse.<List<ProductResponse>>builder()
+    public ResponseEntity<ApiResponse<ProductPageResponse>> getAllProducts(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+
+        Pageable pageable = PageRequest.of(page, size);
+        ProductPageResponse products = productService.getAllProducts(pageable);
+
+        ApiResponse<ProductPageResponse> response = ApiResponse.<ProductPageResponse>builder()
                 .success(true)
                 .message("Products fetched successfully")
                 .data(products)
