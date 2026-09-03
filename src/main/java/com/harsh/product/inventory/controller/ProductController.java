@@ -9,6 +9,7 @@ import com.harsh.product.inventory.dto.response.ProductPageResponse;
 import com.harsh.product.inventory.dto.response.ProductResponse;
 import com.harsh.product.inventory.dto.response.ProductUpdateResponse;
 import com.harsh.product.inventory.service.ProductService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -22,6 +23,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/products")
 @AllArgsConstructor
+@SecurityRequirement(name = "bearerAuth")
 public class ProductController {
 
     private final ProductService productService;
