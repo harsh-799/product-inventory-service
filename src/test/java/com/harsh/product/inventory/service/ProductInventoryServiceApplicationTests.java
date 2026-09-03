@@ -1,4 +1,4 @@
-package com.harsh.product_inventory_service;
+package com.harsh.product.inventory.service;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

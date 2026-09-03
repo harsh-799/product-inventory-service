@@ -1,4 +1,4 @@
-package com.harsh.product_inventory_service;
+package com.harsh.product.inventory.service;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
