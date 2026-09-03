@@ -1,9 +1,9 @@
 package com.harsh.product.inventory.controller;
 
 import com.harsh.product.inventory.dto.request.LoginRequest;
+import com.harsh.product.inventory.dto.request.RefreshTokenRequest;
 import com.harsh.product.inventory.dto.request.RegisterRequest;
-import com.harsh.product.inventory.dto.response.LoginResponse;
-import com.harsh.product.inventory.dto.response.RegisterResponse;
+import com.harsh.product.inventory.dto.response.*;
 import com.harsh.product.inventory.service.AuthService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -29,6 +29,22 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> loginUser(@Valid @RequestBody LoginRequest loginRequest) {
         return ResponseEntity.status(HttpStatus.OK).body(authService.login(loginRequest));
+    }
+
+    @PostMapping("/refresh")
+    public ResponseEntity<ApiResponse<RefreshTokenResponse>> refreshToken(
+            @Valid @RequestBody RefreshTokenRequest request) {
+
+        RefreshTokenResponse refreshTokenResponse =
+                authService.refreshToken(request);
+
+        ApiResponse<RefreshTokenResponse> response = ApiResponse.<RefreshTokenResponse>builder()
+                .success(true)
+                .message("Token refreshed successfully")
+                .data(refreshTokenResponse)
+                .build();
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
 }
