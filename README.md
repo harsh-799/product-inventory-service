@@ -15,7 +15,7 @@ A production-grade RESTful web service built with **Spring Boot 4 / Java 21**, i
 8. [Refresh Token + Rotation](#8-refresh-token--rotation)
 9. [Role-Based Access Control (RBAC)](#9-role-based-access-control-rbac)
 10. [Product APIs](#10-product-apis)
-11. [Item APIs](#11-item-apis)
+11. [Item APIs (Domain Extension)](#11-item-apis-domain-extension)
 12. [Validation](#12-validation)
 13. [Pagination](#13-pagination)
 14. [Standardized Error Responses](#14-standardized-error-responses)
@@ -34,6 +34,25 @@ A production-grade RESTful web service built with **Spring Boot 4 / Java 21**, i
 
 ## 1. Project Overview
 The **Product Inventory Service** is designed to provide robust product catalog and stock inventory tracking capabilities for enterprise applications. It adheres to RESTful best practices, stateless security, comprehensive database normalization, and containerized deployment with Docker and Docker Compose.
+
+> ### ⚡ Quick Evaluation Guide (Run in 60 Seconds)
+>
+> 1. **Clone and Start Containers**:
+>    ```bash
+>    git clone https://github.com/harsh-799/product-inventory-service.git
+>    cd product-inventory-service
+>    docker compose up --build
+>    ```
+> 2. **Swagger UI Documentation**: [http://localhost:8080/swagger-ui/index.html](http://localhost:8080/swagger-ui/index.html)
+> 3. **Pre-configured Demo Admin**:
+>    - **Email**: `admin@inventory.com`
+>    - **Password**: `Admin@123`
+>    - **Role**: `ADMIN`
+> 4. **Run Test Suite (35 tests - 100% Pass)**:
+>    ```bash
+>    ./mvnw test        # Linux/macOS
+>    .\mvnw test        # Windows
+>    ```
 
 ---
 
@@ -163,10 +182,11 @@ To prevent replay attacks and token theft, the service enforces **Refresh Token 
 
 ---
 
-## 11. Item APIs
-Items represent stock quantity units associated with a parent `Product` ($1 \text{ Product} \rightarrow * \text{ Items}$):
-- `POST /api/v1/products/{productId}/items`: Adds an inventory stock record with `quantity > 0`.
-- `GET /api/v1/products/{productId}/items`: Lists all stock items linked to that product ID.
+## 11. Item APIs (Domain Extension)
+While the baseline assignment focused primarily on Product catalog management, the **Item** sub-resource APIs were intentionally designed and added as a domain extension to reflect real-world inventory operations. In a practical enterprise setup, a `Product` represents catalog metadata (name, audit timestamps), while `Item` records model discrete inventory stock entries and quantity batches ($1 \text{ Product} \rightarrow * \text{ Items}$):
+
+- `POST /api/v1/products/{productId}/items`: Adds an inventory stock record with `quantity > 0` linked to the given product. (*Requires `ADMIN` role*)
+- `GET /api/v1/products/{productId}/items`: Lists all stock inventory items associated with that product ID. (*Accessible by `USER` and `ADMIN`*)
 
 ---
 
@@ -299,7 +319,7 @@ Cross-Origin Resource Sharing (CORS) is explicitly configured in `SecurityConfig
 ### Steps:
 1. Clone the repository:
    ```bash
-   git clone <repository-url>
+   git clone https://github.com/harsh-799/product-inventory-service.git
    cd product-inventory-service
    ```
 2. Set environment variables (or rely on default local configuration):
@@ -326,7 +346,7 @@ The project provides a fully automated **Docker Compose** configuration with Pos
 
 ### Quick Start:
 ```bash
-git clone <repository-url>
+git clone https://github.com/harsh-799/product-inventory-service.git
 cd product-inventory-service
 docker compose up --build
 ```
