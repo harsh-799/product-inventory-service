@@ -69,4 +69,21 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorDetails);
     }
+
+    @ExceptionHandler(org.springframework.web.bind.MethodArgumentNotValidException.class)
+    public ResponseEntity<ErrorDetails> handleValidationException(org.springframework.web.bind.MethodArgumentNotValidException ex) {
+        java.util.List<com.harsh.product.inventory.dto.response.ValidationResponse> errors = ex.getBindingResult()
+                .getFieldErrors()
+                .stream()
+                .map(err -> new com.harsh.product.inventory.dto.response.ValidationResponse(err.getField(), err.getDefaultMessage()))
+                .toList();
+
+        ErrorDetails errorDetails = ErrorDetails.builder()
+                .success(false)
+                .message("Validation failed")
+                .errors(errors)
+                .build();
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorDetails);
+    }
 }
